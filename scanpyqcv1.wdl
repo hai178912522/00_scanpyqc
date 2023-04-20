@@ -68,13 +68,14 @@ task calculate_memory {
         done
         echo "total_cells: $total_cells"
         echo "total_genes: $total_genes"
-        mem_on_mtx=$((total_cells * total_genes))
-        echo
-
+        echo "$total_cells" > total_cells.txt
+        echo "$total_genes" > total_genes.txt
     }
 
     output {
-        Int mem_on_mtx = ceil(mem_on_mtx * 0.00000003 + 2)
+        Int total_cells = read_int("total_cells.txt")
+        Int total_genes = read_int("total_genes.txt")
+        Int mem_on_mtx = ceil(total_cells * total_genes * 0.00000003 + 2)
     }
 
     RuntimeAttr runtime_attr_default = object {
@@ -91,6 +92,8 @@ task calculate_memory {
         docker: docker
     }
 }
+
+
 
 task analysis_flow {
     input {
